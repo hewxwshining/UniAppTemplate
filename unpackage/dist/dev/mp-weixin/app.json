@@ -1,0 +1,41 @@
+{
+  "pages": [
+    "pages/driverSide/index/index",
+    "pages/driverSide/order/order",
+    "pages/vendorSide/index/index",
+    "pages/vendorSide/order/order",
+    "pages/login/login",
+    "pages/my/my"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#a0a0a0",
+    "selectedColor": "#428ac6",
+    "borderStyle": "black",
+    "backgroundColor": "#fff",
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/driverSide/index/index"
+      },
+      {
+        "pagePath": "pages/driverSide/order/order"
+      },
+      {
+        "pagePath": "pages/vendorSide/index/index"
+      },
+      {
+        "pagePath": "pages/vendorSide/order/order"
+      },
+      {
+        "pagePath": "pages/my/my"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

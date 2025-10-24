@@ -1,0 +1,103 @@
+/* 水平间距 */
+/* 水平间距 */
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.login-container.data-v-e4e4508d {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+.login-content.data-v-e4e4508d {
+  padding: 30rpx 20rpx;
+  margin-top: 100rpx;
+  /* 为固定导航栏留出空间 */
+}
+.login-title.data-v-e4e4508d {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+.login-title .title-text.data-v-e4e4508d {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #fff;
+  margin-left: 5px;
+}
+.login-form .login-form-content.data-v-e4e4508d {
+  background-color: #D2E5F6;
+  border-radius: 8px;
+}
+.login-form .form-item.data-v-e4e4508d {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+}
+.login-form .form-item .input-label.data-v-e4e4508d {
+  font-size: 32rpx;
+  color: #000;
+  width: 162rpx;
+}
+.login-form .form-item .input-label .label-icon.data-v-e4e4508d {
+  color: #f00;
+  margin-left: 10rpx;
+}
+.login-form .form-item .input-wrapper.data-v-e4e4508d {
+  flex: 1;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+}
+.login-form .form-item .input-wrapper .input-field.data-v-e4e4508d {
+  height: 88rpx;
+  font-size: 32rpx;
+  color: #333333;
+  width: 100%;
+}
+.login-form .form-item .input-wrapper .input-field.data-v-e4e4508d::-webkit-input-placeholder {
+  color: #999999;
+}
+.login-form .form-item .input-wrapper .input-field.data-v-e4e4508d::placeholder {
+  color: #999999;
+}
+.login-form .form-item .input-wrapper .input-field .uni-input-input.data-v-e4e4508d {
+  font-size: 32rpx !important;
+}
+.login-form .login-btn.data-v-e4e4508d {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  background-color: #295AF5;
+  color: #ffffff;
+  border: none;
+  border-radius: 68rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-top: 60rpx;
+}
+.login-form .login-btn.disabled.data-v-e4e4508d {
+  background-color: #5D98FB;
+  color: #fff !important;
+}
+.login-form .login-btn.data-v-e4e4508d::after {
+  border: none;
+}

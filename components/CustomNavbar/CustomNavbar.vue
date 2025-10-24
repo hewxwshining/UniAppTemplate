@@ -1,11 +1,11 @@
 <template>
 	<view class="custom-navbar" :style="navbarStyle">
 		<!-- 导航栏内容 -->
-		<view class="navbar-content" :style="{ height: customNavHeight + 'px' }">
+		<view class="navbar-content" :style="{ height: statusNavHeight + 'px' }">
 			<!-- 左侧区域 -->
 			<view class="navbar-left">
 				<view v-if="showBack" class="back-btn" @click="handleBack">
-					<uni-icons type="left" size="20" color="#333"></uni-icons>
+					<uni-icons type="left" size="24" color="#fff"></uni-icons>
 				</view>
 				<slot name="left"></slot>
 			</view>
@@ -24,84 +24,105 @@
 	</view>
 </template>
 
-
 <script setup lang="ts">
-	import { ref, computed, getCurrentInstance } from 'vue'
+	import { ref, computed, getCurrentInstance } from "vue";
 	import { onLoad, onReady, onShow, onHide } from "@dcloudio/uni-app";
-	import { useGlobalStore } from '../../store';
-	const globalStore = useGlobalStore()
 
-	const emit = defineEmits(['back']);
-	const props = withDefaults(defineProps<{
-		title ?: string
-		showBack ?: boolean,
-		backgroundColor ?: string,
-		titleColor ?: string,
-		borderColor ?: string,
-		customStyle ?: any
-	}>(), {
-		title: '默认标题',
-		showBack: false,
-		backgroundColor: '',
-		titleColor: '#fff',
-		customStyle: {}
-	})
-
+	const emit = defineEmits(["back"]);
+	const props = withDefaults(
+		defineProps<{
+			title ?: string;
+			showBack ?: boolean;
+			backgroundColor ?: string;
+			titleColor ?: string;
+			borderColor ?: string;
+			customStyle ?: any;
+		}>(),
+		{
+			title: "默认标题",
+			showBack: false,
+			backgroundColor: "",
+			titleColor: "#fff",
+			customStyle: {},
+		}
+	);
 
 	const navbarStyle = computed(() => {
 		const style = {
 			backgroundColor: props.backgroundColor,
 			borderBottom: props.borderColor ? `1px solid ${props.borderColor}` : null,
-			paddingTop: statusBarHeight.value + 'px',
-			height: (statusBarHeight.value + customNavHeight.value) + 'px',
-			...props?.customStyle
-		}
-		return style
-	})
+			paddingTop: curStatusBarHeight.value + "px",
+			height: curStatusBarHeight.value + statusNavHeight.value + "px",
+			...props?.customStyle,
+		};
+		return style;
+	});
 	const titleStyle = computed(() => {
 		return {
-			color: props.titleColor
-		}
-	})
+			color: props.titleColor,
+		};
+	});
 
 	// 是否有 back 事件监听（Vue3 事件监听不在 $attrs，需要从 vnode.props 读取）
-	const instance = getCurrentInstance()
+	const instance = getCurrentInstance();
 	const hasBackListener = computed(() => {
-		const vnodeProps = instance?.vnode?.props as Record<string, unknown> | undefined
-		return !!(vnodeProps && (vnodeProps.onBack))
-	})
-	const statusBarHeight = ref(0);
-	const customNavHeight = ref(globalStore.customNavHeight) // 自定义导航栏内容区高度(默认值，单位px)
+		const vnodeProps = instance?.vnode?.props as
+			| Record<string, unknown>
+			| undefined;
+		return !!(vnodeProps && vnodeProps.onBack);
+	});
+	const curStatusBarHeight = ref(0);
+	const statusNavHeight = ref(44); // 自定义导航栏内容区高度(默认值，单位px)
 	// 获取状态栏高度
 	const getStatusBarHeight = () => {
-		const systemInfo = uni.getSystemInfoSync()
-		statusBarHeight.value = systemInfo.statusBarHeight || 0
+		// #ifdef MP-WEIXIN
+		const {
+			statusBarHeight
+		} = uni.getWindowInfo()
+		// #endif
+		// #ifndef MP-WEIXIN
+		const {
+			statusBarHeight
+		} = uni.getSystemInfoSync()
+		// #endif
+
+		curStatusBarHeight.value = statusBarHeight || 0;
 		// #ifdef MP-WEIXIN
 		// 在微信小程序中，获取胶囊按钮信息以计算导航栏高度
 		const menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-		customNavHeight.value = (menuButtonInfo.top - statusBarHeight.value) * 2 + menuButtonInfo.height;
-		globalStore.setCustomNavHeight(statusBarHeight.value + customNavHeight.value)
+		statusNavHeight.value =
+			(menuButtonInfo.top - curStatusBarHeight.value) * 2 + menuButtonInfo.height;
 		// #endif
-	}
+	};
 
 	// 返回按钮点击事件
 	const handleBack = () => {
-		emit('back')
+		emit("back");
 		// 如果没有监听 back 事件，则执行默认返回逻辑
 		if (!hasBackListener.value) {
 			uni.navigateBack({
 				fail: () => {
 					// 如果无法返回，则跳转到首页
 					uni.reLaunch({
-						url: '/pages/index/index'
-					})
-				}
-			})
+						url: "/pages/index/index",
+					});
+				},
+			});
 		}
-	}
+	};
+	// 获取导航栏总高度
+	const getNavBarHeight = () => {
+		return curStatusBarHeight.value + statusNavHeight.value;
+	};
+
+	// 暴露方法给父组件
+	defineExpose({
+		getNavBarHeight,
+	});
+
 	onLoad(() => {
-		getStatusBarHeight()
-	})
+		getStatusBarHeight();
+	});
 </script>
 
 <style lang="scss" scoped>
@@ -153,7 +174,7 @@
 				max-width: calc(100% - 120px);
 
 				.navbar-title {
-					font-size: 17px;
+					font-size: 34rpx;
 					font-weight: 600;
 					color: #333333;
 					text-align: center;
@@ -168,30 +189,6 @@
 				align-items: center;
 				justify-content: flex-end;
 				min-width: 60px;
-			}
-		}
-	}
-
-	// 深色主题适配
-	@media (prefers-color-scheme: dark) {
-		.custom-navbar {
-			background-color: #1a1a1a;
-			border-bottom-color: #333333;
-
-			.navbar-content {
-				.navbar-left {
-					.back-btn {
-						&:active {
-							background-color: rgba(255, 255, 255, 0.1);
-						}
-					}
-				}
-
-				.navbar-center {
-					.navbar-title {
-						color: #ffffff;
-					}
-				}
 			}
 		}
 	}

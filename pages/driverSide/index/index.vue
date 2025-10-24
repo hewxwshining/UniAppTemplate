@@ -10,7 +10,6 @@
 	import layout from '@/components/Layout/Layout.vue';
 	import { onLoad } from "@dcloudio/uni-app";
 	onLoad(() => {
-		uni.hideTabBar()
 
 	})
 </script>

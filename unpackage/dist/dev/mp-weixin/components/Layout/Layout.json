@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "custom-tab-bar": "../CustomTabBar/CustomTabBar",
+    "custom-navbar": "../CustomNavbar/CustomNavbar"
+  }
+}

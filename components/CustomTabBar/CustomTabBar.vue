@@ -31,7 +31,6 @@
 	})
 
 	const tabBarStore = useTabBarStore()
-	console.log(tabBarStore.tabBarList)
 	const visibleTabList = ref(tabBarStore.tabBarList)
 
 	// 获取当前页面路径
