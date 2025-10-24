@@ -2,6 +2,9 @@
  * 工具函数集合
  */
 
+import { ResData } from "@/api/auth"
+import { CODE_NOARG, CODE_NOBINPER, CODE_NODATA } from "@/api/const"
+
 /**
  * 消息提示
  * @param title 提示内容
@@ -19,6 +22,42 @@ export function msg(title : string, options : any = {}) {
 			...defaultOptions
 		})
 	}, 50)
+}
+
+/**
+ * 消息提示（传入api返回的code，若满足）
+ * @param title 提示内容
+ * @param options 配置选项
+ */
+export function msgByCode(data : ResData, title : string, options : any = {}) {
+	let istip = true;
+	if (data) {
+		if (data.code == CODE_NODATA) {
+			if (title == null || title.length == 0) {
+				msg('没有数据', options)
+				return
+			}
+		}
+		if (data.code == CODE_NOARG) {
+			istip = false;//底层已统一提示，这里跳过
+		}
+		if (data.code == CODE_NOBINPER) {
+			istip = false;
+		}
+	}
+	if (istip) {
+		const defaultOptions = {
+			icon: 'none',
+			duration: 2000,
+			...options
+		}
+		setTimeout(() => {
+			uni.showToast({
+				title,
+				...defaultOptions
+			})
+		}, 50)
+	}
 }
 
 /**
@@ -80,6 +119,9 @@ export function getCurrentPagePath() : string {
  * @returns string
  */
 export function formatDate(date : Date | string | number, format : string = 'YYYY-MM-DD HH:mm:ss') : string {
+	if (typeof date == 'string') {
+		date = date.replace(/-/g, '/')
+	}
 	const d = new Date(date)
 	const year = d.getFullYear()
 	const month = String(d.getMonth() + 1).padStart(2, '0')
@@ -96,6 +138,31 @@ export function formatDate(date : Date | string | number, format : string = 'YYY
 		.replace('mm', minutes)
 		.replace('ss', seconds)
 }
+
+/**
+ * 转字符串
+ */
+interface ShowStatus {
+	value ?: number | string;
+	text ?: string;
+	label ?: string;
+	color ?: string;
+	status ?: string;
+	[key : string] : any; // 添加任意属性支持
+}
+export const formatter = (
+	value : any,
+	list : ShowStatus[],
+	valueKey : string = "value",
+	labelKey : string = "text"
+) : string => {
+	if (!Array.isArray(list) || list.length === 0) {
+		return ""; // 如果列表为空或不是数组，直接返回空字符串
+	}
+	const item = list.find((item) => item[valueKey] === value);
+	return item && item[labelKey] ? String(item[labelKey]) : ""; // 确保返回值为字符串
+};
+
 
 /**
  * 防抖函数

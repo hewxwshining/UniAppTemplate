@@ -15,21 +15,20 @@
  *         移除: cache.remove('k');
  *         清理：cache.clear();
  * 】
- * @type {String}
  */
 // 访问 token 缓存的 key
 const ACCESS_TOKEN_KEY = "access_token";
 // 刷新 token 缓存的 key
 const REFRESH_TOKEN_KEY = "refresh_token";
 
-const postfix : string = '_cashapp'; // 缓存后缀
+const postfix : string = '_carassit'; // 缓存后缀
 /**
  * 设置缓存
- * @param  {[type]} k [键名]
- * @param  {[type]} v [键值]
- * @param  {[type]} t [时间、单位秒]
+ * @param k 键名
+ * @param v 键值
+ * @param t 时间、单位秒
  */
-function put(k : string, v : any, t = 0) {
+export function put(k : string, v : any, t = 0) {
 	uni.setStorageSync(k, v)
 	let seconds = parseInt(t.toString());
 	if (seconds > 0) {
@@ -43,10 +42,10 @@ function put(k : string, v : any, t = 0) {
 
 /**
  * 获取缓存
- * @param  {[type]} k   [键名]
- * @param  {[type]} def [获取为空时默认]
+ * @param k 键名
+ * @param def 获取为空时默认
  */
-function get(k : string, def : any = 0) {
+export function get(k : string, def : any = 0) {
 	let deadtime = parseInt(uni.getStorageSync(k + postfix))
 	if (deadtime) {
 		if (parseInt(deadtime.toString()) < Date.parse(new Date().toString()) / 1000) {
