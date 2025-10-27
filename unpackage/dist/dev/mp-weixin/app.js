@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
+const utils_routeGuard = require("./utils/routeGuard.js");
+const store_modules_user = require("./store/modules/user.js");
+const utils_cache = require("./utils/cache.js");
 const store_index = require("./store/index.js");
 if (!Math) {
   "./pages/driverSide/index/index.js";
@@ -8,22 +11,25 @@ if (!Math) {
   "./pages/vendorSide/index/index.js";
   "./pages/vendorSide/order/order.js";
   "./pages/login/login.js";
-  "./pages/my/my.js";
+  "./pages/driverSide/my/my.js";
+  "./pages/vendorSide/my/my.js";
 }
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "App",
   setup(__props) {
-    common_vendor.onLaunch(() => {
-      common_vendor.index.__f__("log", "at App.vue:4", "App onLaunch");
-      common_vendor.index.reLaunch({
-        url: "/pages/login/login"
-      });
+    const userStore = store_modules_user.useUserStore();
+    common_vendor.onLaunch(async () => {
+      common_vendor.index.__f__("log", "at App.vue:8", "App onLaunch");
+      utils_routeGuard.setupGlobalRouteGuard();
+      utils_cache.clearToken();
+      userStore.initUserState();
     });
     common_vendor.onShow(() => {
-      common_vendor.index.__f__("log", "at App.vue:11", "App Show");
+      common_vendor.index.__f__("log", "at App.vue:19", "APP onShow");
+      userStore.refreshUserInfo();
     });
     common_vendor.onHide(() => {
-      common_vendor.index.__f__("log", "at App.vue:14", "App Hide");
+      common_vendor.index.__f__("log", "at App.vue:24", "App Hide");
     });
     return () => {
     };

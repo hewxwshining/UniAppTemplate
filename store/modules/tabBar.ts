@@ -59,7 +59,7 @@ export const vendorSideTabBarItem: TabBarItem[] = [
 ];
 
 export const useTabBarStore = defineStore('tabBar', () => {
-	const tabBarList = ref<TabBarItem[]>([]);
+	const tabBarList = ref<TabBarItem[]>(driverSideTabBarItem);
 	const tabBarPagePath = ref();
 	const setTabBarList = (userType: number) => {
 		if (userType === USERTYPE_DRIVER) {

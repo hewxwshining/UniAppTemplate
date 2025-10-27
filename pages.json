@@ -37,7 +37,14 @@
 			}
 		},
 		{
-			"path": "pages/my/my",
+			"path": "pages/driverSide/my/my",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/vendorSide/my/my",
 			"style": {
 				"navigationBarTitleText": "我的",
 				"navigationStyle": "custom"
@@ -59,17 +66,26 @@
 		"height": "0",
 		"backgroundColor": "#fff",
 		"custom": true,
-		"list": [{
-			"pagePath": "pages/driverSide/index/index"
-		}, {
-			"pagePath": "pages/driverSide/order/order"
-		}, {
-			"pagePath": "pages/vendorSide/index/index"
-		}, {
-			"pagePath": "pages/vendorSide/order/order"
-		}, {
-			"pagePath": "pages/my/my"
-		}]
+		"list": [
+			{
+				"pagePath": "pages/driverSide/index/index"
+			}, 
+			{
+				"pagePath": "pages/driverSide/order/order"
+			}, 
+			{
+				"pagePath": "pages/vendorSide/index/index"
+			}, 
+			{
+				"pagePath": "pages/vendorSide/order/order"
+			}, 
+			{
+				"pagePath": "pages/driverSide/my/my"
+			}, 
+			{
+				"pagePath": "pages/vendorSide/my/my"
+			}
+		]
 	},
 	"uniIdRouter": {},
 	"easycom": {

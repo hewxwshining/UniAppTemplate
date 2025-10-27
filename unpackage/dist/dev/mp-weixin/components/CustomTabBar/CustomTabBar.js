@@ -11,9 +11,20 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     selectedColor: { default: "#428ac6" },
     backgroundColor: { default: "#fff" }
   },
-  setup(__props) {
+  setup(__props, { expose: __expose }) {
+    const tabBarStyle = common_vendor.computed(() => {
+      const style = {
+        height: statusSaveHeight.value + statusTabBarHeight.value + "px",
+        paddingBottom: statusSaveHeight.value + "px"
+      };
+      return style;
+    });
+    const statusSaveHeight = common_vendor.ref(0);
+    const statusTabBarHeight = common_vendor.ref(60);
     const tabBarStore = store_modules_tabBar.useTabBarStore();
-    const visibleTabList = common_vendor.ref(tabBarStore.tabBarList);
+    const visibleTabList = common_vendor.computed(() => {
+      return tabBarStore.tabBarList;
+    });
     const getCurrentPagePath = () => {
       const pages = getCurrentPages();
       const currentPage = pages[pages.length - 1];
@@ -32,6 +43,27 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }
       });
     };
+    const setTabSaveHeight = () => {
+      const {
+        safeArea,
+        screenHeight,
+        safeAreaInsets
+      } = common_vendor.index.getWindowInfo();
+      if (safeArea) {
+        statusSaveHeight.value = screenHeight - safeArea.bottom;
+      } else {
+        statusSaveHeight.value = 0;
+      }
+    };
+    const getTabBarHeight = () => {
+      return statusSaveHeight.value + statusTabBarHeight.value;
+    };
+    __expose({
+      getTabBarHeight
+    });
+    common_vendor.onLoad(() => {
+      setTabSaveHeight();
+    });
     return (_ctx, _cache) => {
       return {
         a: common_vendor.f(visibleTabList.value, (item, index, i0) => {
@@ -43,7 +75,9 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             e: currentPagePath.value === item.pagePath ? 1 : "",
             f: common_vendor.o(($event) => handleTabClick(item), index)
           };
-        })
+        }),
+        b: statusTabBarHeight.value + "px",
+        c: common_vendor.s(tabBarStyle.value)
       };
     };
   }

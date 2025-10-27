@@ -1,4 +1,28 @@
-
 node_modules
 
+# 敏感配置文件
+api/const.ts
+manifest.json
+project.config.json
+project.private.config.json
+
+# unpackage 构建输出
+unpackage/
+
+# 微信开发者工具配置
+project.config.json
+project.private.config.json
+
+# IDE 配置
+.vscode/
+.idea/
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
 

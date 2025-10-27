@@ -5,7 +5,8 @@
     "pages/vendorSide/index/index",
     "pages/vendorSide/order/order",
     "pages/login/login",
-    "pages/my/my"
+    "pages/driverSide/my/my",
+    "pages/vendorSide/my/my"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -33,7 +34,10 @@
         "pagePath": "pages/vendorSide/order/order"
       },
       {
-        "pagePath": "pages/my/my"
+        "pagePath": "pages/driverSide/my/my"
+      },
+      {
+        "pagePath": "pages/vendorSide/my/my"
       }
     ]
   },

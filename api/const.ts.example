@@ -1,0 +1,91 @@
+/*小程序appid*/
+export const APPID = 'your_wechat_appid_here';
+
+
+/*用户类型-司机*/
+export const USERTYPE_DRIVER = 190;
+/*用户类型-厂商*/
+export const USERTYPE_VENDOR = 200;
+/**
+*没有数据
+*/
+export const CODE_NODATA = 200;
+/**
+*缺少参数
+*/
+export const CODE_NOARG = 210;
+/**
+ * 账号未绑定人员
+ */
+export const CODE_NOBINPER = 520;
+
+/*缓存接送车数据的缓存key*/
+export const CACHEKEY_CARTASK = 'cartask';
+/*缓存小程序openid*/
+export const CACHEKEY_OPENID = 'openid';
+
+export enum DictFlagEnum {
+	CarRepairType = "CarRepairType"
+}
+
+/*保养类型(废弃！)*/
+export const db_MaintainType : Array<any> = [
+	{
+		"Value": "1",
+		"Text": "日常保养"
+	},
+	{
+		"Value": "2",
+		"Text": "一级保养"
+	},
+	{
+		"Value": "3",
+		"Text": "二级保养"
+	}
+];
+/*保养计划类型*/
+export const db_RepairPlanType : Array<any> = [
+	{
+		"Value": "1",
+		"Text": "永久"
+	},
+	{
+		"Value": "2",
+		"Text": "限时"
+	}
+];
+/*保养计划周期*/
+export const db_PeriodType : Array<any> = [
+	{
+		"Value": "1",
+		"Text": "每月"
+	},
+	{
+		"Value": "2",
+		"Text": "每季度"
+	},
+	{
+		"Value": "3",
+		"Text": "每半年"
+	},
+	{
+		"Value": "4",
+		"Text": "每年"
+	}
+];
+/*审批状态*/
+export const db_ApprovalStatus : Array<any> = [
+      {
+        "Value": "1",
+        "Text": "审批申请"
+      },
+      {
+        "Value": "2",
+        "Text": "审批通过"
+      },
+      {
+        "Value": "3",
+        "Text": "审批不通过"
+      }
+];
+

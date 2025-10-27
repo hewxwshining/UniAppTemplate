@@ -1,18 +1,20 @@
 <template>
-	<Layout title="登录" :show-tab-bar="false">
+	<Layout title="登录" :show-nav-bar="false" :show-tab-bar="false">
 		<view class="login-content">
 			<!-- 登录标题 -->
 			<view class="login-title dflex-c">
-				<image src="/static/images/login/car.png" mode="aspectFit" style="width: 72px; height: 72px;"></image>
+				<image src="/static/images/login/car.png" mode="aspectFit" style="width: 55px; height: 55px"></image>
 				<text class="title-text">车联网</text>
 			</view>
 
 			<!-- 登录表单 -->
 			<view class="login-form">
 				<view class="login-form-content">
-
-					<view class="form-item ">
-						<view class="input-label">账号<text class="label-icon">*</text></view>
+					<view class="form-item">
+						<view class="input-label">
+							账号
+							<text class="label-icon">*</text>
+						</view>
 						<view class="input-wrapper dflex">
 							<input v-model="username" placeholder="请输入您的账号" class="input-field" autocomplete="off"
 								:data-form-type="'other'" :data-lpignore="'true'" :data-1p-ignore="'true'"
@@ -24,39 +26,44 @@
 					</view>
 
 					<view class="form-item">
-						<view class="input-label">密码<text class="label-icon">*</text></view>
+						<view class="input-label">
+							密码
+							<text class="label-icon">*</text>
+						</view>
 						<view class="input-wrapper dflex">
 							<input :password="showPassword" v-model="password" class="input-field" placeholder="请输入密码"
 								autocomplete="off" :data-form-type="'other'" :data-lpignore="'true'"
 								:data-1p-ignore="'true'" :data-bwignore="'true'" :data-dashlane-ignore="'true'"
 								:data-bitwarden-watching="'false'" />
 							<image
-								:src="!showPassword ?'/static/images/login/psw-open.png':'/static/images/login/psw.png'"
-								mode="aspectFill" style="width: 48rpx; height: 48rpx;" @click="changePassword"></image>
+								:src="!showPassword ? '/static/images/login/psw-open.png' : '/static/images/login/psw.png'"
+								mode="aspectFill" style="width: 48rpx; height: 48rpx" @click="changePassword"></image>
 						</view>
 					</view>
-
 				</view>
 
 				<!-- 登录按钮 -->
-				<button class="login-btn" :class="{ 'disabled': !canLogin }" :disabled="!canLogin" @click="handleLogin">
-					登录
-				</button>
+				<button class="login-btn" :class="{ disabled: !canLogin }" :disabled="!canLogin"
+					@click="handleLogin">登录</button>
 			</view>
 		</view>
-
 	</Layout>
-
 </template>
 
 <script lang="ts" setup>
-	import { ref, computed, onMounted } from 'vue'
+	import { LoginResponseData } from '@/api/auth';
+	import { APPID, CACHEKEY_OPENID, USERTYPE_DRIVER, USERTYPE_VENDOR } from '@/api/const';
 	import Layout from '@/components/Layout/Layout.vue';
+	import { useUserStore } from '@/store/modules/user';
 
-	const username = ref<string>("");
-	const password = ref<string>("");
+	import { msg } from '@/utils/base';
+	import cache, { setAccessToken } from '@/utils/cache';
+	import { onLoad } from '@dcloudio/uni-app';
+	import { computed, ref } from 'vue';
+	const userStore = useUserStore();
+	const username = ref<string>('');
+	const password = ref<string>('');
 	const showPassword = ref<Boolean>(true);
-
 
 	const changePassword = () => {
 		showPassword.value = !showPassword.value;
@@ -65,43 +72,61 @@
 		return !!username.value.length;
 	});
 	const clearIcon = function () {
-		username.value = "";
+		username.value = '';
 	};
 
-
 	const canLogin = computed(() => {
-		return username.value && password.value
-	})
-
-
+		return username.value && password.value;
+	});
+	const isLoading = ref(false);
 	const handleLogin = async () => {
-		if (!canLogin.value) return
-
-		try {
-
-
-			// 模拟API调用
-			await new Promise(resolve => setTimeout(resolve, 1000))
-
-			uni.showToast({
-				title: '登录成功',
-				icon: 'success'
-			})
-
-			// 登录成功后跳转到首页
-			setTimeout(() => {
-				uni.reLaunch({
-					url: '/pages/index/index'
-				})
-			}, 1500)
-
-		} catch (error) {
-			uni.showToast({
-				title: '登录失败，请检查验证码',
-				icon: 'none'
-			})
+		if (!canLogin.value) return;
+		if (isLoading.value) return;
+		isLoading.value = true;
+		let wxAppId = '', wxOpenid = ''
+		// #ifdef MP-WEIXIN
+		wxAppId = APPID
+		wxOpenid = cache.get(CACHEKEY_OPENID,'')
+		// #endif
+		const isSuccess = await userStore.loginWithPassword(username.value, password.value, wxAppId, wxOpenid);
+		isLoading.value = false;
+		if (isSuccess) {
+			loginOk();
 		}
-	}
+	};
+
+	/**
+	 * 存储登录token
+	 */
+	const setLoginToken = (res : LoginResponseData) => {
+		const { access_token, refresh_token, expires_in, token_type } = res;
+		setAccessToken(access_token);
+	};
+
+	/**
+	 * 登录跳转
+	 */
+	const loginOk = async () => {
+		msg('登录成功', { icon: 'success' });
+		await userStore.setUserInfos();
+
+		if (userStore.userInfo.UserType == USERTYPE_DRIVER) {
+			// 登录成功后跳转到首页
+			uni.reLaunch({
+				url: '/pages/driverSide/index/index'
+			});
+		}
+		if (userStore.userInfo.UserType == USERTYPE_VENDOR) {
+			// 登录成功后跳转到首页
+			uni.reLaunch({
+				url: '/pages/vendorSide/index/index'
+			});
+		}
+	};
+
+	onLoad(() => {
+
+	});
 </script>
 
 <style lang="scss" scoped>
@@ -118,19 +143,19 @@
 
 	.login-title {
 		text-align: center;
-		margin-bottom:60rpx;
+		margin-bottom: 60rpx;
 
 		.title-text {
 			font-size: 48rpx;
 			font-weight: 600;
 			color: #fff;
-			margin-left: 5px;
+			margin-left: 10px;
 		}
 	}
 
 	.login-form {
 		.login-form-content {
-			background-color: #D2E5F6;
+			background-color: #d2e5f6;
 			border-radius: 8px;
 		}
 
@@ -177,7 +202,7 @@
 			width: 100%;
 			height: 96rpx;
 			line-height: 96rpx;
-			background-color: #295AF5;
+			background-color: #295af5;
 			color: #ffffff;
 			border: none;
 			border-radius: 68rpx;
@@ -186,7 +211,7 @@
 			margin-top: 60rpx;
 
 			&.disabled {
-				background-color: #5D98FB;
+				background-color: #5d98fb;
 				color: #fff !important;
 			}
 

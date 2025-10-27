@@ -1,6 +1,10 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
+const api_const = require("../../api/const.js");
+const store_modules_user = require("../../store/modules/user.js");
+const utils_base = require("../../utils/base.js");
+const utils_cache = require("../../utils/cache.js");
 if (!Array) {
   const _easycom_uni_icons2 = common_vendor.resolveComponent("uni-icons");
   _easycom_uni_icons2();
@@ -13,6 +17,7 @@ const Layout = () => "../../components/Layout/Layout.js";
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "login",
   setup(__props) {
+    const userStore = store_modules_user.useUserStore();
     const username = common_vendor.ref("");
     const password = common_vendor.ref("");
     const showPassword = common_vendor.ref(true);
@@ -28,27 +33,38 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const canLogin = common_vendor.computed(() => {
       return username.value && password.value;
     });
+    const isLoading = common_vendor.ref(false);
     const handleLogin = async () => {
       if (!canLogin.value)
         return;
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1e3));
-        common_vendor.index.showToast({
-          title: "登录成功",
-          icon: "success"
+      if (isLoading.value)
+        return;
+      isLoading.value = true;
+      let wxAppId = "", wxOpenid = "";
+      wxAppId = api_const.APPID;
+      wxOpenid = utils_cache.cache.get(api_const.CACHEKEY_OPENID, "");
+      const isSuccess = await userStore.loginWithPassword(username.value, password.value, wxAppId, wxOpenid);
+      isLoading.value = false;
+      if (isSuccess) {
+        loginOk();
+      }
+    };
+    const loginOk = async () => {
+      utils_base.msg("登录成功", { icon: "success" });
+      await userStore.setUserInfos();
+      if (userStore.userInfo.UserType == api_const.USERTYPE_DRIVER) {
+        common_vendor.index.reLaunch({
+          url: "/pages/driverSide/index/index"
         });
-        setTimeout(() => {
-          common_vendor.index.reLaunch({
-            url: "/pages/index/index"
-          });
-        }, 1500);
-      } catch (error) {
-        common_vendor.index.showToast({
-          title: "登录失败，请检查验证码",
-          icon: "none"
+      }
+      if (userStore.userInfo.UserType == api_const.USERTYPE_VENDOR) {
+        common_vendor.index.reLaunch({
+          url: "/pages/vendorSide/index/index"
         });
       }
     };
+    common_vendor.onLoad(() => {
+    });
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_assets._imports_0,
@@ -73,6 +89,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         n: common_vendor.o(handleLogin),
         o: common_vendor.p({
           title: "登录",
+          ["show-nav-bar"]: false,
           ["show-tab-bar"]: false
         })
       });
