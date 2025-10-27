@@ -6229,7 +6229,7 @@ function populateParameters(fromRes, toRes) {
   let _SDKVersion = SDKVersion;
   const hostLanguage = (language || "").replace(/_/g, "-");
   const parameters = {
-    appId: "__UNI__9A08A3F",
+    appId: "__UNI__DE1D9C0",
     appName: "CarAssist",
     appVersion: "1.0.0",
     appVersionCode: "100",
@@ -6378,7 +6378,7 @@ const getAppBaseInfo = {
       hostName: _hostName,
       hostSDKVersion: SDKVersion,
       hostTheme: theme,
-      appId: "__UNI__9A08A3F",
+      appId: "__UNI__DE1D9C0",
       appName: "CarAssist",
       appVersion: "1.0.0",
       appVersionCode: "100",
