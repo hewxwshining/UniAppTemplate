@@ -2,6 +2,7 @@ node_modules
 
 # 敏感配置文件
 api/const.ts
+utils/request.ts
 manifest.json
 project.config.json
 project.private.config.json
